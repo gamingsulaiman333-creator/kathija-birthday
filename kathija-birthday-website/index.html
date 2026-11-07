@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Happy Birthday Kathija! 🎂🎉</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+
+  <!-- Google Fonts: Rounded & cute fonts + elegant handwriting for letter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Dancing+Script:wght@600;700&family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating Background Canvas / Container -->
+  <div id="balloon-container" aria-hidden="true"></div>
+  <div id="sparkle-container" aria-hidden="true"></div>
+
+  <!-- Audio Control Button (Fixed at Top Right) -->
+  <button id="music-toggle" class="floating-btn" title="Toggle Music" aria-label="Toggle background music">
+    <span class="music-icon">🎵</span>
+    <span class="music-wave">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
+
+  <!-- ========================================================
+       STEP 1: START SCREEN (Tap to unlock sound, mic & animations)
+       ======================================================== -->
+  <div id="start-overlay" class="start-overlay">
+    <div class="start-card">
+      <div class="start-badge">✨ A Special Surprise Awaits ✨</div>
+      <div class="gift-box-anim" id="start-gift">🎁</div>
+      <h1 class="start-title">For Someone Truly Wonderful...</h1>
+      <p class="start-subtitle">Turn your sound on for the best experience 🎶</p>
+      <button id="start-btn" class="primary-btn pulse-glow">
+        <span>Tap to Start 🎉</span>
+      </button>
+      <p class="start-hint">Made with lots of love & care 💕</p>
+    </div>
+  </div>
+
+  <!-- Main Website Container (Becomes active after start button) -->
+  <main id="main-content" class="content-hidden">
+
+    <!-- ========================================================
+         HERO SECTION: Birthday Greeting
+         ======================================================== -->
+    <section id="hero-section" class="section hero-section">
+      <div class="hero-badge">💖 Today is all about YOU! 💖</div>
+      <h1 class="hero-title">
+        Happy Birthday <br />
+        <span class="highlight-name">Kathija</span> 🎉
+      </h1>
+      <div class="from-tag">
+        From <span class="from-name">madu <span class="cow-emoji">🐮</span></span>
+      </div>
+      <p class="hero-quote">
+        Wishing you the happiest, brightest, and most unforgettable birthday! ✨
+      </p>
+      
+      <a href="#cake-section" class="scroll-down-indicator" aria-label="Scroll to cake">
+        <span>Make a wish</span>
+        <span class="down-arrow">👇</span>
+      </a>
+    </section>
+
+    <!-- ========================================================
+         STEP 2 & 3: CAKE & CANDLE SECTION
+         ======================================================== -->
+    <section id="cake-section" class="section cake-section">
+      <div class="section-badge">✨ Time to Make a Wish ✨</div>
+      <h2 id="candle-heading" class="section-title">Blow the candle 🎂</h2>
+      <p id="candle-instruction" class="candle-hint">
+        Blow gently into your microphone, or tap the candle flame! 🕯️💨
+      </p>
+
+      <!-- Microphone & Auto-Blow Status Bar -->
+      <div id="mic-status-wrapper" class="mic-status-wrapper">
+        <div id="mic-pulse" class="mic-pulse">🎙️</div>
+        <span id="mic-label">Listening for your breath...</span>
+        <div class="mic-volume-meter" title="Sound Level Meter">
+          <div id="mic-volume-bar" class="mic-volume-bar"></div>
+        </div>
+      </div>
+
+      <!-- Interactive 3D CSS Birthday Cake -->
+      <div class="cake-stage">
+        <!-- Confetti explosion anchor -->
+        <div id="confetti-anchor"></div>
+
+        <div class="cake-wrapper" id="cake-container" role="button" tabindex="0" title="Tap candle to blow it out">
+          <!-- Sparkles & Hearts around cake -->
+          <div class="cake-sparkle s1">✨</div>
+          <div class="cake-sparkle s2">⭐</div>
+          <div class="cake-sparkle s3">✨</div>
+          <div class="cake-sparkle s4">💖</div>
+
+          <!-- Candle -->
+          <div class="candle" id="birthday-candle">
+            <!-- Flame Container -->
+            <div class="flame-wrapper" id="flame-wrapper">
+              <div class="flame" id="flame"></div>
+              <div class="flame-glow"></div>
+            </div>
+            <!-- Smoke Container (Activated when blown out) -->
+            <div class="smoke-wrapper" id="smoke-wrapper">
+              <span class="smoke-puff p1"></span>
+              <span class="smoke-puff p2"></span>
+              <span class="smoke-puff p3"></span>
+            </div>
+            <div class="wick"></div>
+            <div class="candle-body">
+              <div class="candle-stripe"></div>
+              <div class="candle-stripe"></div>
+              <div class="candle-stripe"></div>
+            </div>
+          </div>
+
+          <!-- Cake Layers -->
+          <div class="cake">
+            <!-- Top Frosting & Toppings -->
+            <div class="cake-top-toppings">
+              <span class="topping strawberry">🍓</span>
+              <span class="topping cream c1"></span>
+              <span class="topping strawberry">🍓</span>
+              <span class="topping cream c2"></span>
+              <span class="topping strawberry">🍓</span>
+            </div>
+
+            <!-- Tier 1 (Top Tier) -->
+            <div class="cake-tier tier-top">
+              <div class="frosting-drip drip-1"></div>
+              <div class="frosting-drip drip-2"></div>
+              <div class="frosting-drip drip-3"></div>
+              <div class="frosting-drip drip-4"></div>
+              <div class="sprinkle sp1"></div>
+              <div class="sprinkle sp2"></div>
+              <div class="sprinkle sp3"></div>
+            </div>
+
+            <!-- Tier 2 (Bottom Tier) -->
+            <div class="cake-tier tier-bottom">
+              <div class="frosting-drip drip-b1"></div>
+              <div class="frosting-drip drip-b2"></div>
+              <div class="frosting-drip drip-b3"></div>
+              <div class="frosting-drip drip-b4"></div>
+              <div class="frosting-drip drip-b5"></div>
+              <div class="sprinkle sp4"></div>
+              <div class="sprinkle sp5"></div>
+              <div class="sprinkle sp6"></div>
+              <div class="sprinkle sp7"></div>
+            </div>
+
+            <!-- Plate -->
+            <div class="cake-plate"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Celebratory Success Banner (Shown after flame is blown out) -->
+      <div id="wish-success-box" class="wish-success-box hidden">
+        <div class="celebration-badge">🎉 YAAAAY! 🎉</div>
+        <h3 class="success-title">May all your sweetest dreams come true! 🌟</h3>
+        <p class="success-desc">Kathija, you are one in a million. Someone special wrote you a letter below...</p>
+        <button id="jump-to-letter-btn" class="secondary-btn">
+          Read Your Letter 💌
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         STEP 4: INTERACTIVE ENVELOPE & LETTER SECTION
+         ======================================================== -->
+    <section id="letter-section" class="section letter-section">
+      <div class="section-badge">💌 Straight From The Heart 💌</div>
+      <h2 class="section-title">A Special Letter For You</h2>
+      <p class="section-subtitle">Tap the envelope to open and read your letter 💕</p>
+
+      <!-- Envelope Container -->
+      <div class="envelope-container" id="envelope-container">
+        <div class="envelope" id="envelope" role="button" tabindex="0" title="Tap to open letter">
+          <!-- Back Flap -->
+          <div class="envelope-back"></div>
+
+          <!-- Letter Paper Inside (Slides up when envelope opens) -->
+          <div class="letter-paper" id="letter-paper">
+            <div class="letter-inner">
+              <div class="letter-header">
+                <span class="letter-stamp">🌸</span>
+                <span class="letter-date">For My Bestie</span>
+              </div>
+
+              <!-- Heartfelt Letter Content -->
+              <div class="letter-body">
+                <p class="letter-salutation">
+                  To my favourite person, my forever best friend! <strong>Kathija</strong> 💗
+                </p>
+
+                <p class="letter-highlight">
+                  Happy Birthdayyyyy! 🎂💕
+                </p>
+
+                <p>
+                  I don't know where to start because there are so many things I want to tell you. First of all, I'm so lucky to have you in my life. You're not just my best friend; you're someone who makes my ordinary days special.
+                </p>
+
+                <p>
+                  Thank you for all the silly laughs, unforgettable memories, endless conversations, and for being someone I can always be myself with. I hope you know how special you are to me.
+                </p>
+
+                <p class="school-memories">
+                  But i really miss the school days when we r in same school🥺✨
+                </p>
+
+                <p>
+                  I wish god could give you all the happiness in the world because you deserve nothing less. No matter where life takes us, I hope our friendship stays the same and still laugh about our stupid little memories.
+                </p>
+
+                <p>
+                  And never forget how precious you are to me. I hope this new chapter of your life brings you endless smiles, beautiful memories, and everything your heart wishes for.
+                </p>
+
+                <p class="letter-sign-celebration">
+                  Once again, Happy Birthday, my kathija 💖
+                </p>
+
+                <p class="letter-signature">
+                  Forever your best friend <br />
+                  <span class="signature-name">kanmani✨</span>
+                </p>
+              </div>
+
+              <div class="letter-footer-note">
+                <button type="button" id="fold-letter-btn" class="fold-letter-btn">Fold Letter 💌</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front Pocket Layers of Envelope -->
+          <div class="envelope-pocket"></div>
+          <!-- Flap with Wax Seal -->
+          <div class="envelope-flap" id="envelope-flap">
+            <div class="wax-seal" id="wax-seal" title="Tap to open">
+              <span class="seal-icon">🐮</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="envelope-tap-guide" id="envelope-guide">
+          👆 Tap the envelope or wax seal to open!
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         STEP 5: PHOTO ALBUM - "OUR MEMORIES 📸"
+         ======================================================== -->
+    <section id="memories-section" class="section memories-section">
+      <div class="section-badge">📸 Cherished Moments 📸</div>
+      <h2 class="section-title">Our Memories</h2>
+      <p class="section-subtitle">
+        A little walk down memory lane with my favorite human 🌸 <br />
+        <small class="click-hint">(Tap any photo to view in full screen!)</small>
+      </p>
+
+      <!-- Responsive Memories Grid / Polaroid Showcase -->
+      <div class="polaroid-grid" id="polaroid-grid">
+
+        <!-- Photo 1 -->
+        <article class="polaroid-card tilt-left" data-index="0" tabindex="0" role="button">
+          <div class="tape-strip"></div>
+          <div class="polaroid-img-wrapper">
+            <img src="images/1.jpg" alt="Kathija and Kanmani Rooftop Fun" loading="lazy" />
+          </div>
+          <div class="polaroid-caption">
+            <p class="caption-title">Panda filter madness 🐼</p>
+            <p class="caption-sub">Silly selfies & endless rooftop laughs! ✨</p>
+          </div>
+        </article>
+
+        <!-- Photo 2 -->
+        <article class="polaroid-card tilt-right" data-index="1" tabindex="0" role="button">
+          <div class="tape-strip"></div>
+          <div class="polaroid-img-wrapper">
+            <img src="images/2.jpg" alt="Iconic Spider-heroes Pose" loading="lazy" />
+          </div>
+          <div class="polaroid-caption">
+            <p class="caption-title">Our iconic Spider-heroes 🕷️✌️</p>
+            <p class="caption-sub">Partners in crime forever & ever! 💖</p>
+          </div>
+        </article>
+
+        <!-- Photo 3 -->
+        <article class="polaroid-card tilt-left" data-index="2" tabindex="0" role="button">
+          <div class="tape-strip"></div>
+          <div class="polaroid-img-wrapper">
+            <img src="images/3.jpg" alt="Mirror Selfie Aesthetic" loading="lazy" />
+          </div>
+          <div class="polaroid-caption">
+            <p class="caption-title">Mirror selfie aesthetic ✨</p>
+            <p class="caption-sub">Serving looks effortlessly always! 🌸</p>
+          </div>
+        </article>
+
+        <!-- Photo 4 -->
+        <article class="polaroid-card tilt-right" data-index="3" tabindex="0" role="button">
+          <div class="tape-strip"></div>
+          <div class="polaroid-img-wrapper">
+            <img src="images/4.jpg" alt="Cozy Candid Moment" loading="lazy" />
+          </div>
+          <div class="polaroid-caption">
+            <p class="caption-title">Sweet smiles & golden days 🌼</p>
+            <p class="caption-sub">You brighten up every single room! ☀️</p>
+          </div>
+        </article>
+
+        <!-- Photo 5 -->
+        <article class="polaroid-card tilt-center" data-index="4" tabindex="0" role="button">
+          <div class="tape-strip"></div>
+          <div class="polaroid-img-wrapper">
+            <img src="images/5.jpg" alt="Double Trouble Besties" loading="lazy" />
+          </div>
+          <div class="polaroid-caption">
+            <p class="caption-title">Double Trouble Besties 👯‍♀️💕</p>
+            <p class="caption-sub">Forever my soul sister and constant! 🐮✨</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         FOOTER: Warm Closing Wish
+         ======================================================== -->
+    <footer class="birthday-footer">
+      <div class="footer-heart">💖</div>
+      <p class="footer-text">
+        Made with all my love for <strong>Kathija</strong> on her special day!
+      </p>
+      <p class="footer-subtext">
+        From <strong>madu 🐮</strong> (kanmani✨) • Best Friends Forever
+      </p>
+      <button id="back-to-top-btn" class="back-to-top" title="Back to top">
+        Back to top 🎈
+      </button>
+    </footer>
+
+  </main>
+
+  <!-- ========================================================
+       LIGHTBOX MODAL FOR MEMORIES
+       ======================================================== -->
+  <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true" role="dialog" aria-label="Photo Preview">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Close photo preview">✕</button>
+      
+      <button id="lightbox-prev" class="lightbox-nav prev" aria-label="Previous photo">❮</button>
+      
+      <div class="lightbox-image-container">
+        <img id="lightbox-img" src="" alt="Full view memory" />
+        <div id="lightbox-caption" class="lightbox-caption"></div>
+      </div>
+      
+      <button id="lightbox-next" class="lightbox-nav next" aria-label="Next photo">❯</button>
+    </div>
+  </div>
+
+  <!-- Audio Element (Will play custom birthday.mp3 if present, otherwise Web Audio API synth plays melody) -->
+  <audio id="birthday-audio" preload="auto">
+    <source src="images/birthday.mp3" type="audio/mpeg">
+    <source src="birthday.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
